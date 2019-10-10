@@ -55,47 +55,71 @@ player = Player()
 # keyboard input the player has entered since the last press of the 'enter' key.
 # ---------------------------------------------------------------------------------
 def parse(input_text):
-    command = input_text.lower()
+    command = input_text
     object1 = None
     object2 = None
+
+    # --------------------------------------------------------------------------------------
+    # Challenge 1
+    # -------------
+    #
+    # Properly handle upper case player input. Right now the parser only deals with
+    # lower case letters, if you turn on caps lock, or add some capital letters with shift,
+    # it won't be able to understand you.
+    #
+    # Try the .lower() method on the input text to change all input into lower case.
+    #
+    # Hints:
+    #
+    # - You can find more documentation on the string .lower() function
+    #   at this link: http://www.tutorialspoint.com/python/string_lower.htm
+    #
+    # ----------------------------------------
+    # Challenge 2 is on line 85!
+    # --------------------------------------------------------------------------------------
 
     # the .split() function splits the input_text string variable into a python list of individual words
     words = input_text.split()
 
-    if len(words) > 0:        
+    # ---------------------------------------------------------------------------------------
+    # Challenge 2
+    # -------------
+    #
+    # See if you can change the parser so that it understands four new synonyms
+    # for the current commands.
+    #
+    # For example:
+    # - 'study' or 'inspect' could be used for 'examine'
+    # - 'pick up' could be used for 'take'
+    # - 'press', 'use' or 'operate' could be used for 'activate'
+    # ---------------------------------------
+    #  See if you can beat the text adventure or, add a new scene!
+    # ----------------------------------------------------------------------
+    if len(words) > 0:
         found_examine_words = False
         remaining_words_index = 0
-        if words[0] == "examine" or words[0] == "inspect" or words[0] == "study":
+        if words[0] == "examine":
             remaining_words_index = 1
             found_examine_words = True
         if words[0] == "look" and words[1] == "at":
             remaining_words_index = 2
             found_examine_words = True
-            
+
         if found_examine_words:
             if len(words) > remaining_words_index:
                 remaining_words = ""
                 for i in range(remaining_words_index, len(words)):
                     remaining_words += words[i]
-                    if i < len(words)-1:
+                    if i < len(words) - 1:
                         remaining_words += " "
                 command = "examine"
                 object1 = remaining_words
 
-        found_take_words = False
         if (words[0] == "take") and len(words) > 1:
-            found_take_words = True
-            remaining_words_index = 1
-
-        if (words[0] == "pick") and (words[1] == "up") and len(words) > 2:
-            found_take_words = True
-            remaining_words_index = 1
-
-        if found_take_words:
             remaining_words = ""
-            for i in range(remaining_words_index, len(words)):
+            for i in range(1, len(words)):
                 remaining_words += words[i]
-                if i < len(words)-1:
+                if i < len(words) - 1:
                     remaining_words += " "
             command = "take"
             object1 = remaining_words
@@ -104,11 +128,11 @@ def parse(input_text):
             remaining_words = ""
             for i in range(1, len(words)):
                 remaining_words += words[i]
-                if i < len(words)-1:
+                if i < len(words) - 1:
                     remaining_words += " "
             command = "activate"
             object1 = remaining_words
-        
+
         if (words[0] == "use" or words[0] == "combine") and len(words) > 3:
             # find linking preposition between objects
             for i in range(1, len(words)):
@@ -116,12 +140,12 @@ def parse(input_text):
                     object1 = ""
                     for j in range(1, i):
                         object1 += words[j]
-                        if j < i-1:
+                        if j < i - 1:
                             object1 += " "
                     object2 = ""
-                    for k in range(i+1, len(words)):
+                    for k in range(i + 1, len(words)):
                         object2 += words[k]
-                        if k < len(words)-1:
+                        if k < len(words) - 1:
                             object2 += " "
             command = "combine"
 
@@ -133,11 +157,11 @@ def process_command(command, object1, object2):
     global active_scene
     global inventory
     global player
-    
+
     output = "Press enter to begin"
     if have_started:
         output = "Command not understood"
-    
+
     if command == "":
         active_scene.reset_fade_timer()
         output = active_scene.get_description(player)
@@ -196,7 +220,6 @@ italic_font = pygame.font.Font("data/Gabriola.ttf", 18)
 italic_font.set_italic(True)
 header_font = pygame.font.Font("data/AGENCYB.TTF", 18)
 
-
 adventure_output = "[h]A Christmas Adventure[/h]\n\nType 'help' for instructions\n\nPress enter to begin"
 entered_keys = ""
 
@@ -206,7 +229,7 @@ clock = pygame.time.Clock()
 while running:
     frameTime = clock.tick(60)
     time_delta = frameTime / 1000.0
-    
+
     for event in pygame.event.get():
         if event.type == QUIT:
             running = False
@@ -232,7 +255,7 @@ while running:
     render_adventure_text(screen, adventure_output, entered_keys, font, bold_font, italic_font, header_font,
                           active_scene, player, time_delta)
     active_scene.render_front(screen)
-    
+
     pygame.display.flip()  # flip all our drawn stuff onto the screen
 
 pygame.quit()  # exited game loop so quit pygame
