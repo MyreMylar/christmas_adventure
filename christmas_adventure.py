@@ -55,50 +55,17 @@ player = Player()
 # keyboard input the player has entered since the last press of the 'enter' key.
 # ---------------------------------------------------------------------------------
 def parse(input_text):
-    command = input_text
+    command = input_text.lower()
     object1 = None
     object2 = None
-
-    # --------------------------------------------------------------------------------------
-    # Challenge 1
-    # -------------
-    #
-    # Properly handle upper case player input. Right now the parser only deals with
-    # lower case letters, if you turn on caps lock, or add some capital letters with shift,
-    # it won't be able to understand you.
-    #
-    # Try the .lower() method on the input text to change all input into lower case.
-    #
-    # Hints:
-    #
-    # - You can find more documentation on the string .lower() function
-    #   at this link: http://www.tutorialspoint.com/python/string_lower.htm
-    #
-    # ----------------------------------------
-    # Challenge 2 is on line 85!
-    # --------------------------------------------------------------------------------------
 
     # the .split() function splits the input_text string variable into a python list of individual words
     words = input_text.split()
 
-    # ---------------------------------------------------------------------------------------
-    # Challenge 2
-    # -------------
-    #
-    # See if you can change the parser so that it understands four new synonyms
-    # for the current commands.
-    # 
-    # For example:
-    # - 'study' or 'inspect' could be used for 'examine'
-    # - 'pick up' could be used for 'take'
-    # - 'press', 'use' or 'operate' could be used for 'activate'
-    # ---------------------------------------
-    #  See if you can beat the text adventure or, add a new scene!
-    # ----------------------------------------------------------------------
     if len(words) > 0:        
         found_examine_words = False
         remaining_words_index = 0
-        if words[0] == "examine":
+        if words[0] == "examine" or words[0] == "inspect" or words[0] == "study":
             remaining_words_index = 1
             found_examine_words = True
         if words[0] == "look" and words[1] == "at":
@@ -115,9 +82,18 @@ def parse(input_text):
                 command = "examine"
                 object1 = remaining_words
 
+        found_take_words = False
         if (words[0] == "take") and len(words) > 1:
+            found_take_words = True
+            remaining_words_index = 1
+
+        if (words[0] == "pick") and (words[1] == "up") and len(words) > 2:
+            found_take_words = True
+            remaining_words_index = 1
+
+        if found_take_words:
             remaining_words = ""
-            for i in range(1, len(words)):
+            for i in range(remaining_words_index, len(words)):
                 remaining_words += words[i]
                 if i < len(words)-1:
                     remaining_words += " "
