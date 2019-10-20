@@ -1,9 +1,10 @@
 def show_inventory(inventory):
-    inventory_desc = "[b]Inventory\n---------\n\n"
+    inventory_desc = ("<b><u>Inventory</u></b>"
+                      "<br><br>")
     for item in inventory:
         inventory_desc += "- "
         inventory_desc += item.name
-        inventory_desc += "\n"
+        inventory_desc += "<br>"
 
     return inventory_desc
 
@@ -141,7 +142,7 @@ def take_object(scene, inventory, object_name):
         if object_name == scene_object.name:
             if scene_object.pick_upable:
                 inventory.append(scene_object)
-                scene.objects[:] = [x for x in scene.objects if not (x.name == object_name)]
+                scene.objects[:] = [x for x in scene.objects if not (x.name == scene_object.name)]
                 description = "You take the "
                 description += scene_object.name
         else:
@@ -149,7 +150,7 @@ def take_object(scene, inventory, object_name):
                 if object_name == alias:
                     if scene_object.pick_upable:
                         inventory.append(scene_object)
-                        scene.objects[:] = [x for x in scene.objects if not (x.name == object_name)]
+                        scene.objects[:] = [x for x in scene.objects if not (x.name == scene_object.name)]
                         description = "You take the "
                         description += scene_object.name
 

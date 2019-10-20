@@ -34,7 +34,10 @@ class SceneThree(Scene):
         panel.aliases.append("display panel")
         panel.aliases.append("electronic display panel")
         panel.aliases.append("small electronic display panel")
-        panel.detailed_description = ("The panel reads: 7,456,292,324/7,456,292,325\n\nOne unit still missing. \n\n"
+        panel.detailed_description = ("The panel reads: 7,456,292,324/7,456,292,325"
+                                      "<br><br>"
+                                      "One unit still missing."
+                                      "<br><br>"
                                       "Project N.P. Closed until issue resolved.")
         self.objects.append(panel)
 
@@ -51,15 +54,20 @@ class SceneThree(Scene):
     
     def get_description(self, player):
         description = ("The alley continues for awhile before reaching a dead end at a windowless building."
-                       " The main feature of the building is a new-looking door set into a steel door frame.\n\n"
+                       " The main feature of the building is a new-looking door set into a steel door frame."
+                       "<br><br>"
                        "Moonlight is the main source of light here, this far from the street lights, which makes"
-                       " it easy to make out a [b]small electronic display panel[/b] glowing next to the door.\n\n"
-                       "There is a [b]big red button[/b] set directly underneath the panel.\n\n")
+                       " it easy to make out a <b>small electronic display panel</b> glowing next to the door."
+                       "<br><br>"
+                       "There is a <b><font color=#AA0000>big red button</font></b> set directly underneath the panel."
+                       "<br><br>")
         
         if self.door_open:
-            description += "The door is currently open.\n\n"
+            description += ("The door is currently open."
+                            "<br><br>")
         else:
-            description += "The door is currently closed.\n\n"
+            description += ("The door is currently closed."
+                            "<br><br>")
             
         description += "Other than the door to the South, there is an exit to the North back down the alley."
         if player.returned_drone:
@@ -77,7 +85,9 @@ class SceneThree(Scene):
                 self.exit_south = "scene_4"
             else:
                 description = ("You limber up your finger and prepare yourself mentally for excitement. It's not "
-                               "every day you get to press a big, red button.\n\nSadly, reality fails to live up to"
+                               "every day you get to press a big, red button."
+                               "<br><br>"
+                               "Sadly, reality fails to live up to"
                                " your dreams and nothing happens when you hit the button. Not even when you press it,"
                                " like, fifteen times to be sure.")
 
