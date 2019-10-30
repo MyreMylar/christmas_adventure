@@ -27,7 +27,7 @@
     "colours":
     {
       "normal_text": "#AA1414FF",
-      "normal_bg": "#00000000"
+      "dark_bg": "#00000000"
     },
     "font":
     {
@@ -39,7 +39,8 @@
     },
     "misc":
     {
-      "border_width": "0"
+      "border_width": "0",
+      "shadow_width": "0"
     }
   },
   "#carat":
