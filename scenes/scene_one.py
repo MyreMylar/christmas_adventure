@@ -90,16 +90,19 @@ class SceneOne(Scene):
         description = ("It is the night before Christmas Eve. The sun set a few hours ago but you can still make"
                        " out your surroundings thanks to the orange glow of an old street light. The walls, that"
                        " make up the sides of the alley you stand in, loom above you - their exact height, far out"
-                       " of sight above.\n\n"
-                       "[b]Snowflakes[/b] fall gently all around.\n\n")
+                       " of sight above."
+                       "<br><br>"
+                       "<b>Snowflakes</b> fall gently all around."
+                       "<br><br>")
 
         for obj in self.objects:
             if obj.name == "drone":
                 description += ("There is a light coating of snow on the concrete of the alley's floor, but not enough"
                                 " to conceal the object directly in front of you. Which is the only thing, at first"
-                                " glance, that is obviously entirely out of place. It is a [b]quadcopter drone[/b]. "
+                                " glance, that is obviously entirely out of place. It is a <b>quadcopter drone</b>. "
                                 "One of the rotors is missing and a red LED flashes silently illuminating the nearby "
-                                "snow.\n\n")
+                                "snow."
+                                "<br><br>")
                        
         description += "There are exits to the north and south"
                        

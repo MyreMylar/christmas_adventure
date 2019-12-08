@@ -1,6 +1,9 @@
 import os
 
-from core.text_render import render_adventure_text
+import pygame
+from pygame.locals import *
+import pygame_gui
+
 from core.functions import show_inventory, try_scene_change, examine_object
 from core.functions import take_object, activate_object, combine_objects
 from core.core_strings import get_instructions
@@ -10,9 +13,6 @@ import scenes.scene_one as s1
 import scenes.scene_two as s2
 import scenes.scene_three as s3
 import scenes.scene_four as s4
-
-import pygame
-from pygame.locals import *
 
 
 # ---------------------------------------
@@ -30,6 +30,13 @@ pygame.display.set_caption('A Christmas Adventure')
 screen = pygame.display.set_mode((640, 480))
 
 background_colour = pygame.Color("#F0F0F0")
+
+ui_manager = pygame_gui.UIManager((640, 480), "data/ui_theme.json")
+ui_manager.add_font_paths('agency', "data/AGENCYB.TTF")
+ui_manager.preload_fonts([{'name': 'agency', 'point_size': 18, 'style': 'regular'},
+                          {'name': 'gabriola', 'point_size': 18, 'style': 'bold'},
+                          {'name': 'gabriola', 'point_size': 18, 'style': 'italic'}])
+
 
 snow_render = Snow(640, 480, screen)
 
@@ -213,15 +220,26 @@ def process_command(command, object1, object2):
     return output
 
 
-font = pygame.font.Font("data/Gabriola.ttf", 18)
-bold_font = pygame.font.Font("data/Gabriola.ttf", 18)
-bold_font.set_bold(True)
-italic_font = pygame.font.Font("data/Gabriola.ttf", 18)
-italic_font.set_italic(True)
-header_font = pygame.font.Font("data/AGENCYB.TTF", 18)
-
-adventure_output = "[h]A Christmas Adventure[/h]\n\nType 'help' for instructions\n\nPress enter to begin"
+adventure_output = ("<font face='agency' size=5>A Christmas Adventure</font>"
+                    "<br><br>"
+                    "Type 'help' for instructions"
+                    "<br><br>"
+                    "Press enter to begin")
 entered_keys = ""
+
+ui_scene_text = pygame_gui.elements.UITextBox(adventure_output,
+                                              pygame.Rect((10, 10), (620, 300)),
+                                              manager=ui_manager,
+                                              object_id="#scene_text")
+ui_scene_text.set_active_effect("typing_appear")
+player_text_entry = pygame_gui.elements.UITextEntryLine(pygame.Rect((20, 320), (600, 19)),
+                                                        manager=ui_manager,
+                                                        object_id="#player_input")
+pygame_gui.elements.UILabel(pygame.Rect((10, 320), (10, 19)),
+                            ">",
+                            manager=ui_manager,
+                            object_id="#carat")
+ui_manager.select_focus_element(player_text_entry)
 
 running = True
 clock = pygame.time.Clock()
@@ -234,26 +252,32 @@ while running:
         if event.type == QUIT:
             running = False
 
-        if event.type == KEYDOWN:
-            if event.key == K_RETURN:
-                if player.game_over:
-                    running = False
-                else:
-                    parsed_command = parse(entered_keys)
-                    adventure_output = process_command(parsed_command[0], parsed_command[1], parsed_command[2])
-                    entered_keys = ""
-            elif event.key == K_BACKSPACE:
-                if len(entered_keys) > 0:
-                    entered_keys = entered_keys[:-1]
-            else:
-                entered_keys += event.unicode
+        ui_manager.process_events(event)
+
+        if event.type == USEREVENT:
+            if event.user_type == "ui_text_entry_finished":
+                entered_keys = event.text
+                parsed_command = parse(entered_keys)
+                adventure_output = process_command(parsed_command[0], parsed_command[1], parsed_command[2])
+                ui_scene_text.kill()
+                ui_scene_text = pygame_gui.elements.UITextBox(adventure_output,
+                                                              pygame.Rect((10, 10), (620, 300)),
+                                                              manager=ui_manager,
+                                                              object_id="#scene_text")
+                if active_scene.is_first_visit and entered_keys != 'help' and entered_keys != 'inventory':
+                    ui_scene_text.set_active_effect("typing_appear")
+                player_text_entry.set_text("")
+
+    if ui_manager.select_focused_element != player_text_entry:
+        ui_manager.unselect_focus_element()
+        ui_manager.select_focus_element(player_text_entry)
 
     active_scene.update(time_delta)
+    ui_manager.update(time_delta)
     screen.blit(active_scene.background, (0, 0))  # draw the background
 
     active_scene.render_back(screen)
-    render_adventure_text(screen, adventure_output, entered_keys, font, bold_font, italic_font, header_font,
-                          active_scene, player, time_delta)
+    ui_manager.draw_ui(screen)
     active_scene.render_front(screen)
 
     pygame.display.flip()  # flip all our drawn stuff onto the screen
