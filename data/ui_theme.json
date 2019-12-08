@@ -1,0 +1,60 @@
+{
+  "text_box":
+  {
+    "colours":
+    {
+      "normal_text": "#000000FF",
+      "dark_bg": "#00000000"
+    },
+    "font":
+    {
+        "name": "gabriola",
+        "size": "18",
+        "bold": "0",
+        "italic": "0",
+        "regular_path": "data/Gabriola.ttf"
+    },
+    "misc":
+    {
+      "border_width": "0",
+      "padding": "10,10",
+      "link_normal_underline": "0",
+      "link_hover_underline": "1"
+    }
+  },
+  "text_entry_line":
+  {
+    "colours":
+    {
+      "normal_text": "#AA1414FF",
+      "dark_bg": "#00000000"
+    },
+    "font":
+    {
+        "name": "gabriola",
+        "size": "18",
+        "bold": "0",
+        "italic": "0",
+        "regular_path": "data/Gabriola.ttf"
+    },
+    "misc":
+    {
+      "border_width": "0",
+      "shadow_width": "0"
+    }
+  },
+  "#carat":
+  {
+    "colours": {
+      "normal_text": "#AA1414FF",
+      "dark_bg": "#00000000"
+    },
+    "font": {
+      "name": "gabriola",
+      "size": "18",
+      "bold": "0",
+      "italic": "0",
+      "regular_path": "data/Gabriola.ttf"
+    }
+  }
+}
