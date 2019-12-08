@@ -16,7 +16,7 @@ import scenes.scene_four as s4
 
 
 # ---------------------------------------
-# Scroll down to line 63 for Challenge 1!
+# Scroll down to line 70 for Challenge 1!
 # ---------------------------------------
 class Player:
     def __init__(self):
