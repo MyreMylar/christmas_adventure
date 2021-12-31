@@ -201,18 +201,21 @@ adventure_output = ("<font face='agency' size=5>A Christmas Adventure</font>"
 entered_keys = ""
 
 ui_scene_text = pygame_gui.elements.UITextBox(adventure_output,
-                                              pygame.Rect((10, 10), (620, 300)),
+                                              pygame.Rect((10, 10), (620, 400)),
                                               manager=ui_manager,
                                               object_id="#scene_text")
-ui_scene_text.set_active_effect("typing_appear")
-player_text_entry = pygame_gui.elements.UITextEntryLine(pygame.Rect((20, 320), (600, 19)),
+ui_scene_text.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR,
+                                params={'time_per_letter': 0.001,
+                                        'time_per_letter_deviation': 0.0003}
+                                )
+player_text_entry = pygame_gui.elements.UITextEntryLine(pygame.Rect((20, 420), (600, 19)),
                                                         manager=ui_manager,
                                                         object_id="#player_input")
-pygame_gui.elements.UILabel(pygame.Rect((10, 320), (10, 19)),
+pygame_gui.elements.UILabel(pygame.Rect((10, 420), (10, 19)),
                             ">",
                             manager=ui_manager,
                             object_id="#carat")
-ui_manager.select_focus_element(player_text_entry)
+ui_manager.set_focus_set(player_text_entry)
 
 running = True
 clock = pygame.time.Clock()
@@ -227,23 +230,22 @@ while running:
 
         ui_manager.process_events(event)
 
-        if event.type == USEREVENT:
-            if event.user_type == "ui_text_entry_finished":
-                entered_keys = event.text
-                parsed_command = parse(entered_keys)
-                adventure_output = process_command(parsed_command[0], parsed_command[1], parsed_command[2])
-                ui_scene_text.kill()
-                ui_scene_text = pygame_gui.elements.UITextBox(adventure_output,
-                                                              pygame.Rect((10, 10), (620, 300)),
-                                                              manager=ui_manager,
-                                                              object_id="#scene_text")
-                if active_scene.is_first_visit and entered_keys != 'help' and entered_keys != 'inventory':
-                    ui_scene_text.set_active_effect("typing_appear")
-                player_text_entry.set_text("")
+        if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED:
+            entered_keys = event.text
+            parsed_command = parse(entered_keys)
+            adventure_output = process_command(parsed_command[0], parsed_command[1], parsed_command[2])
+            ui_scene_text.kill()
+            ui_scene_text = pygame_gui.elements.UITextBox(adventure_output,
+                                                          pygame.Rect((10, 10), (620, 400)),
+                                                          manager=ui_manager,
+                                                          object_id="#scene_text")
+            if active_scene.is_first_visit and entered_keys != 'help' and entered_keys != 'inventory':
+                ui_scene_text.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR,
+                                                params={'time_per_letter': 0.001,
+                                                        'time_per_letter_deviation': 0.0003})
+            player_text_entry.set_text("")
 
-    if ui_manager.select_focused_element != player_text_entry:
-        ui_manager.unselect_focus_element()
-        ui_manager.select_focus_element(player_text_entry)
+    ui_manager.set_focus_set({player_text_entry})
 
     active_scene.update(time_delta)
     ui_manager.update(time_delta)
